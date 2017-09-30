@@ -7,6 +7,7 @@ import locations from './modules/locations'
 import listingTypes from './modules/listingTypes'
 import categories from './modules/categories'
 import addRestaurant from './modules/addRestaurant'
+import images from './modules/images'
 
 Vue.use(Vuex)
 
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     locations,
     listingTypes,
     categories,
-    addRestaurant
+    addRestaurant,
+    images
   }
 })

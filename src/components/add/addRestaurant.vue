@@ -177,6 +177,9 @@
                     </b-col>
                   </b-row>
                 </b-tab>
+                <b-tab title="Images">
+
+                </b-tab>
             </b-tabs>
           </b-card>
         </b-col>
@@ -269,16 +272,21 @@
                     <img :src="imageUrl">
                   </div>
           </b-card>
-          <b-card header="Image gallery"
+          <b-card header="Featured image"
                   header-tag="header"
                   >
-                  <b-form-group id="exampleInputGroup3"
-                        label="Upload images:" >
-                        <b-form-file multiple id="file_input2" v-model="imagesUrl" choose-label="Attachment2" @change="onFilesPicked"></b-form-file>
-                  </b-form-group>
-                  <div class="" v-for="image in images" :key="image.id">
-                    <img :src="image.name">
-                  </div>
+            <div class="">
+              <b-form-group id="exampleInputGroup3"
+                    label="Upload images:" >
+                    <b-form-file id="file_input2" v-model="files" choose-label="Attachment2" multiple ref="filesinput"></b-form-file>
+                    <br> {{this.files.length}} Selected files.
+              </b-form-group>
+              <b-button variant="success" v-bind:class="{ disabled: !files }" @click="commitFiles">Upload</b-button>
+              <b-button @click="clearFiles">Reset</b-button>
+              <div v-for="image in images">
+                <img :src="image">
+              </div>
+            </div>
           </b-card>
         </b-col>
       </b-row>
@@ -287,6 +295,8 @@
 </template>
 
 <script>
+// import * as firebase from 'firebase'
+import * as _ from 'lodash'
 export default {
   name: 'add-restaurant',
   data () {
@@ -305,6 +315,7 @@ export default {
 
       image: '',
       imageUrl: '',
+      imageLocation: '',
 
       imagesUrl: [],
       images: [],
@@ -324,7 +335,12 @@ export default {
 
       whatWeLove1En: '',
       whatWeLove2En: '',
-      whatWeLove3En: ''
+      whatWeLove3En: '',
+
+      files: [],
+      options: {
+        paramName: 'file'
+      }
     }
   },
   computed: {
@@ -333,6 +349,26 @@ export default {
     }
   },
   methods: {
+    clearFiles () {
+      this.$refs.filesinput.reset()
+      this.images = ''
+    },
+    commitFiles () {
+      const filesToUpload = this.files
+      const filesIdx = _.range(this.files.length)
+      // console.log(filesToUpload, filesIdx)
+      _.each(filesIdx, (idx) => {
+        // let filename = filesToUpload[idx].name
+        const fileReader = new FileReader()
+        fileReader.addEventListener('load', () => {
+          this.images.push(fileReader.result)
+          console.log(this.images)
+        })
+        fileReader.readAsDataURL(filesToUpload[idx])
+        this.imagesUrl.push(filesToUpload[idx])
+        console.log(this.imagesUrl)
+      })
+    },
     onCreateRestaurant () {
       const restaurantData = {
         titleEn: this.titleEn,
@@ -346,7 +382,7 @@ export default {
         neighborhoodEn: this.neighborhoodEn,
         likes: this.likes,
         status: this.status,
-
+        images: this.imagesUrl,
         menuItemTitle1En: this.menuItemTitle1En,
         menuItemDescription1En: this.menuItemDescription1En,
         menuItemTitle2En: this.menuItemTitle2En,
@@ -381,27 +417,7 @@ export default {
       })
       fileReader.readAsDataURL(files[0])
       this.image = files[0]
-    },
-    onFilesPicked (e) {
-      /*eslint-disable */
-      //suppress all warnings between comments
-      const files = e.target.files
-      const filesCount = Number(files.length)
-      // const images = this.imagesURl.files
-      // const imagesCount = Number(this.imagesUrl.length)
-        const reader = new FileReader()
-        for(var k= 0; k<filesCount; k++) {
-          if (files[k].files && files[k].files[0]) {
-            reader.addEventListener('load', () => {
-              this.imagesUrl.push(reader.result.name)
-            })
-            reader.readAsDataURL(files[k].files[0])
-            this.images.push(files[k].files[0])
-          }
-        }
-        console.log(this.images)
-      }
-    /*eslint-enable */
+    }
   },
   created: function () {
     this.$store.dispatch('loadCategories', {listingType: this.$route.params.listingType, location: this.$route.params.location})

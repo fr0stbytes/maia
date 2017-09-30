@@ -6,6 +6,9 @@ import router from './router'
 import BootstrapVue from 'bootstrap-vue'
 import store from './store'
 import * as firebase from 'firebase'
+import VueClip from 'vue-clip'
+
+Vue.use(VueClip)
 
 Vue.use(BootstrapVue)
 

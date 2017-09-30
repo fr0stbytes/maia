@@ -12,6 +12,7 @@ import ListingType from '@/components/ListingType'
 import ViewAll from '@/components/ViewAll'
 import AddNew from '@/components/AddNew'
 import Categories from '@/components/Categories'
+import Images from '@/components/Images'
 
 Vue.use(Router)
 
@@ -45,6 +46,10 @@ export default new Router({
             {
               path: '/',
               component: LocationInner
+            },
+            {
+              path: 'images',
+              component: Images
             },
             {
               path: ':listingType',

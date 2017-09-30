@@ -1,4 +1,5 @@
 import * as firebase from 'firebase'
+import _ from 'lodash'
 
 // Initial state
 const state = {
@@ -42,9 +43,42 @@ const actions = {
         'menuItem4': {'title': {en: payload.menuItemTitle4En}, 'description': {en: payload.menuItemDescription4En}}
       }
     }
+    let imageArray = []
+    let key
     firebase.database().ref(payload.location + '/' + payload.listingType + '/').push(restaurant)
     .then((data) => {
-      const key = data.key
+      key = data.key
+      return key
+    })
+    .then(() => {
+      const filesToUpload = payload.images
+      const filesIdx = _.range(payload.images.length)
+      _.each(filesIdx, (idx) => {
+        // console.log(filesToUpload[idx])
+        const upload = {
+          file: filesToUpload[idx],
+          name: filesToUpload[idx].name
+        }
+        // console.log(upload)
+        return firebase.storage().ref('listings/images/').child(`/${upload.name}`).put(upload.file)
+        .then(fileData => {
+          const image = {
+            url: fileData.metadata.downloadURLs[0],
+            name: fileData.metadata.name
+          }
+          imageArray.push(image)
+          // return imageArray
+          console.log(image)
+        })
+        // return firebase.storage().ref('images/').child(`/${upload.name}`)
+        // .put(upload.file)
+      })
+    })
+    .then(() => {
+      console.log(imageArray)
+      return firebase.database().ref(payload.location + '/' + payload.listingType + '/').child(key).update({images: imageArray})
+    })
+    .then(() => {
       commit('createRestaurant', {
         ...restaurant,
         id: key
