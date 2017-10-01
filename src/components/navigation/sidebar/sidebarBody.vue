@@ -20,11 +20,6 @@
         <div class="has-margin-1 has-border-bottom" style="opacity:.2;">
 
         </div>
-        <li class="nav-item">
-          <template class="has-margin-1" v-if="$route.params.location">
-            <router-link :to="{path:'images'}" class="nav-link" append> <i class="fa fa-camera" aria-hidden="true"></i> Images</router-link>
-          </template>
-        </li>
         <li class="nav-item"  v-for="type in types" :key="type.id">
           <template>
             <template v-if="$route.params.location">
