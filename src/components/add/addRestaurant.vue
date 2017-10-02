@@ -362,10 +362,7 @@
           <b-card sub-title="Publish">
               <div class="has-margin-2">
                 <b-button type="submit" variant="success" :block="true">Save in database</b-button>
-                <b-btn type="submit" disabled variant="outline-danger"
-                          :block="true" @click="onCreateRestaurant">
-                  Make Public
-                </b-btn>
+                
               </div>
 
           </b-card>

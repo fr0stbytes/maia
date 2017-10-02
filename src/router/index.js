@@ -66,6 +66,14 @@ export default new Router({
                 {
                   path: 'categories',
                   component: Categories
+                },
+                {
+                  path: 'preview/:id',
+                  component: AddNew
+                },
+                {
+                  path: 'edit/:id',
+                  component: AddNew
                 }
               ]
             }

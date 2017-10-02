@@ -8,6 +8,7 @@ import listingTypes from './modules/listingTypes'
 import categories from './modules/categories'
 import addRestaurant from './modules/addRestaurant'
 import images from './modules/images'
+import shared from './modules/shared'
 
 Vue.use(Vuex)
 
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     listingTypes,
     categories,
     addRestaurant,
-    images
+    images,
+    shared
   }
 })
